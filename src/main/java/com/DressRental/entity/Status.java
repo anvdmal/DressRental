@@ -7,22 +7,22 @@ import java.util.List;
 @Entity
 @Table(name = "rental_status")
 public class Status extends BaseEntity {
-    private String status;
+    private String name;
     private List<Rental> rentals;
 
-    public Status(String status) {
-        this.status = status;
+    public Status(String name) {
+        this.name = name;
     }
 
     protected Status() {}
 
-    @Column(name = "status", nullable = false, length = 127)
-    public String getStatus() {
-        return status;
+    @Column(name = "name", nullable = false, length = 127)
+    public String getName() {
+        return name;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setName(String status) {
+        this.name = status;
     }
 
     @OneToMany(mappedBy = "status", targetEntity = Rental.class)

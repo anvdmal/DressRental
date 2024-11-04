@@ -7,23 +7,23 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 public class Role extends BaseEntity {
-    private String role;
+    private String name;
     private List<User> users;
 
-    public Role(String role) {
-        this.role = role;
+    public Role(String name) {
+        this.name = name;
     }
 
     protected Role() {
     }
 
-    @Column(name = "role", nullable = false, length = 50)
-    public String getRole() {
-        return role;
+    @Column(name = "name", nullable = false, length = 50)
+    public String getName() {
+        return name;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)

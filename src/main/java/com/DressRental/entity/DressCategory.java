@@ -7,23 +7,23 @@ import java.util.List;
 @Entity
 @Table(name = "categories")
 public class DressCategory extends BaseEntity {
-    private String category;
+    private String name;
     private List<Dress> dresses;
 
     public DressCategory(String name) {
-        this.category = name;
+        this.name = name;
     }
 
     protected DressCategory() {
     }
 
-    @Column(name = "category", nullable = false, length = 127)
-    public String getCategory() {
-        return category;
+    @Column(name = "name", nullable = false, length = 127)
+    public String getName() {
+        return name;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setName(String category) {
+        this.name = category;
     }
 
     @OneToMany(mappedBy = "category", targetEntity = Dress.class)
