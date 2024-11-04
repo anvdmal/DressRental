@@ -31,21 +31,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void addUser(UserDTO userDTO) {
-        if (!userRepository.findByEmail(userDTO.getEmail()).isEmpty()) {
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException();
-        } else {
-
-            User user = modelMapper.map(userDTO, User.class);
-            User newUser = userRepository.create(user);
-
-            Role clientRole = roleRepository.findByName("CLIENT")
-                    .orElseThrow(() -> new RuntimeException("Role CLIENT not found"));
-
-            user.setRoles(List.of(clientRole));
-            userRepository.update(user);
-
-            modelMapper.map(newUser, UserDTO.class);
         }
+
+        User user = modelMapper.map(userDTO, User.class);
+        User newUser = userRepository.create(user);
+
+        Role clientRole = roleRepository.findByName("CLIENT")
+                .orElseThrow(() -> new RuntimeException("Role CLIENT not found"));
+
+        user.setRoles(List.of(clientRole));
+        userRepository.update(user);
+
+        modelMapper.map(newUser, UserDTO.class);
+
     }
 
     @Override
