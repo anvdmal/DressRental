@@ -35,10 +35,11 @@ public abstract class BaseRepository<Entity, UUID> {
     }
 
     public Optional<Entity> findByName(String name) {
-        return entityManager.createQuery("select e from " + entityClass.getName() + " e where e.name = :name", entityClass)
+        List<Entity> results = entityManager.createQuery("select e from " + entityClass.getName() + " e where e.name = :name", entityClass)
                 .setParameter("name", name)
-                .getResultStream()
-                .findFirst();
+                .getResultList();
+
+        return results.isEmpty() ? Optional.empty() : Optional.of(results.get(0));
     }
 
     public List<Entity> findAll() {
