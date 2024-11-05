@@ -2,17 +2,21 @@ package com.DressRental.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "user_rating")
 public class UserRating extends BaseEntity {
     private User user;
-    private int rating;  //min max ограничения
+    private int rating;
     private String comment;
+    private LocalDate reviewDate;
 
     public UserRating(User user, int rating, String comment) {
         this.user = user;
         this.rating = rating;
         this.comment = comment;
+        this.reviewDate = LocalDate.now();
     }
 
     protected UserRating() {
@@ -44,5 +48,14 @@ public class UserRating extends BaseEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    @Column(name = "review_date", nullable = false)
+    public LocalDate getReviewDate() {
+        return reviewDate;
+    }
+
+    public void setReviewDate(LocalDate reviewDate) {
+        this.reviewDate = reviewDate;
     }
 }
