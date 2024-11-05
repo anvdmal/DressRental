@@ -1,13 +1,12 @@
 package com.DressRental.commandlinerunner;
 
-import com.DressRental.dto.UserDTO;
-import com.DressRental.dto.UserNameDTO;
-import com.DressRental.dto.UserPasswordDTO;
+import com.DressRental.dto.*;
 import com.DressRental.entity.Role;
 import com.DressRental.entity.User;
 import com.DressRental.exception.InvalidDataException;
 import com.DressRental.repository.impl.RoleRepositoryImpl;
 import com.DressRental.repository.impl.UserRepositoryImpl;
+import com.DressRental.service.impl.UserRatingServiceImpl;
 import com.DressRental.service.impl.UserServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -23,11 +22,16 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
     private final RoleRepositoryImpl roleRepository;
     private final UserRepositoryImpl userRepository;
     private final UserServiceImpl userService;
+    private final UserRatingServiceImpl userRatingService;
 
-    public ApplicationCommandLineRunner(RoleRepositoryImpl roleRepository, UserRepositoryImpl userRepository, UserServiceImpl userService) {
+    public ApplicationCommandLineRunner(RoleRepositoryImpl roleRepository,
+                                        UserRepositoryImpl userRepository,
+                                        UserServiceImpl userService,
+                                        UserRatingServiceImpl userRatingService) {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.userRatingService = userRatingService;
     }
 
     @Override
@@ -41,8 +45,10 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
                     \nВыберите действие:
                     1 - Добавить пользователя
                     2 - Посмотреть всех пользователей
-                    3 - Поменять имя пользователя
-                    4 - Поменять пароль пользователя""");
+                    3 - Изменить имя пользователя
+                    4 - Изменить пароль пользователя
+                    5 - Добавить рейтинг клиенту
+                    6 - Посмотреть все оценки пользователя по email""");
 
             String input = bufferedReader.readLine();
 
@@ -59,6 +65,12 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
                 case "4":
                     this.updateUserPassword();
                     break;
+                case "5":
+                    this.addUserRating();
+                    break;
+                case "6":
+                    this.getRatingsByUserEmail();
+                    break;
                 default:
                     System.out.println("Неверная команда");
             }
@@ -68,7 +80,7 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
 
     private void initRoles() {
         if (roleRepository.findByName("ADMIN").isPresent() && roleRepository.findByName("CLIENT").isPresent()) {
-            System.out.println("Роли поинициализированы!");
+            System.out.println("Роли проинициализированы!");
             return;
         }
 
@@ -94,7 +106,7 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
         System.out.println("Администратор создан!");
     }
 
-    private void addUser() throws IOException { //ошибка добавления
+    private void addUser() throws IOException {
         System.out.println("Введите данные нового пользователя в формате: email пароль имя");
         String[] userParams = bufferedReader.readLine().split("\\s+");
 
@@ -104,7 +116,7 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
             this.userService.addUser(userDTO);
             System.out.println("Пользователь успешно добавлен!");
         } catch (InvalidDataException e) {
-            System.out.println("Ошибка добавления пользователя: " + e.getMessage());
+            System.out.println("Ошибка: " + e.getMessage());
         }
     }
 
@@ -114,24 +126,58 @@ public class ApplicationCommandLineRunner implements CommandLineRunner {
     }
 
 
-    private void updateUserName() throws IOException { //ошибка обновления
+    private void updateUserName() throws IOException {
         System.out.println("Введите email и новое имя через пробел");
         String[] userParams = bufferedReader.readLine().split("\\s+");
 
-        UserNameDTO newUserNameDTO = new UserNameDTO(userParams[0],userParams[1]);
-        this.userService.updateUserName(newUserNameDTO);
-        System.out.println("Имя пользователя успешно обновлено!");
+        UserNameDTO newUserNameDTO = new UserNameDTO(userParams[0], userParams[1]);
+
+        try {
+            this.userService.updateUserName(newUserNameDTO);
+            System.out.println("Имя пользователя успешно обновлено!");
+        } catch (InvalidDataException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
     }
 
-    private void updateUserPassword() throws IOException { //ошибка обновления
+    private void updateUserPassword() throws IOException {
         System.out.println("Введите email и новый пароль через пробел");
         String[] userParams = bufferedReader.readLine().split("\\s+");
 
         UserPasswordDTO newUserPasswordDTO = new UserPasswordDTO(userParams[0], userParams[1]);
-        this.userService.updateUserPassword(newUserPasswordDTO);
-        System.out.println("Пароль успешно обновлен!");
+
+        try {
+            this.userService.updateUserPassword(newUserPasswordDTO);
+            System.out.println("Пароль успешно обновлен!");
+        } catch (InvalidDataException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+    }
+
+    private void addUserRating() throws IOException {
+        System.out.println("Введите email пользователя, рейтинг и комментарий через точку с запятой");
+        String[] userRatingParams = bufferedReader.readLine().split("; ");
+
+        UserRatingDTO newUserRatingDTO = new UserRatingDTO(userRatingParams[0], Integer.parseInt(userRatingParams[1]), userRatingParams[2]);
+
+        try {
+            this.userRatingService.addRating(newUserRatingDTO);
+            System.out.println("Рейтинг успешно добавлен!");
+        } catch (InvalidDataException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
+    }
+
+    private void getRatingsByUserEmail() throws IOException {
+        System.out.println("Введите email");
+        UserEmailDTO userEmailDTO = new UserEmailDTO(bufferedReader.readLine());
+
+        try {
+            List<UserRatingDTO> ratings = this.userRatingService.findRatingsByUserEmail(userEmailDTO);
+            ratings.forEach(rating -> System.out.printf("Email: %s, рейтинг: %d, комментарий: \"%s\", дата: %s%n",
+                    rating.getUserEmail(), rating.getRating(), rating.getComment(), rating.getReviewDate()));
+        } catch (InvalidDataException e) {
+            System.out.println("Ошибка: " + e.getMessage());
+        }
     }
 }
-
-
-
