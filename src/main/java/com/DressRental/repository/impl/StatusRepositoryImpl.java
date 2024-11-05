@@ -1,6 +1,5 @@
 package com.DressRental.repository.impl;
 
-import com.DressRental.entity.Dress;
 import com.DressRental.entity.Status;
 import com.DressRental.repository.BaseRepository;
 import com.DressRental.repository.StatusRepository;
