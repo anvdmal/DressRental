@@ -5,11 +5,14 @@ import com.DressRental.dto.UserNameDTO;
 import com.DressRental.dto.UserPasswordDTO;
 import com.DressRental.entity.Role;
 import com.DressRental.entity.User;
+import com.DressRental.exception.InvalidDataException;
 import com.DressRental.exception.UserAlreadyExistsException;
 import com.DressRental.exception.UserNotFoundException;
 import com.DressRental.repository.impl.RoleRepositoryImpl;
 import com.DressRental.repository.impl.UserRepositoryImpl;
 import com.DressRental.service.UserService;
+import jakarta.validation.ConstraintViolation;
+import com.DressRental.utils.ValidationUtilImpl;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -22,15 +25,19 @@ public class UserServiceImpl implements UserService {
     private final UserRepositoryImpl userRepository;
     private final RoleRepositoryImpl roleRepository;
     private final ModelMapper modelMapper;
+    private final ValidationUtilImpl validationUtil;
 
-    public UserServiceImpl(UserRepositoryImpl userRepository, RoleRepositoryImpl roleRepository, ModelMapper modelMapper) {
+    public UserServiceImpl(UserRepositoryImpl userRepository, RoleRepositoryImpl roleRepository, ModelMapper modelMapper, ValidationUtilImpl validationUtil) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
+        this.validationUtil = validationUtil;
     }
 
     @Override
     public void addUser(UserDTO userDTO) {
+        validateUser(userDTO, "некорректные данные для добавления!");
+
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException();
         }
@@ -39,7 +46,7 @@ public class UserServiceImpl implements UserService {
         User newUser = userRepository.create(user);
 
         Role clientRole = roleRepository.findByName("CLIENT")
-                .orElseThrow(() -> new RuntimeException("Role CLIENT not found"));
+                .orElseThrow(() -> new InvalidDataException("Роль не найдена!"));
 
         user.setRoles(List.of(clientRole));
         userRepository.update(user);
@@ -64,7 +71,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDTO findUserById(UUID id) {
         User user = userRepository.findById(id)
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new UserNotFoundException(id));
         return modelMapper.map(user, UserDTO.class);
     }
 
@@ -77,6 +84,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserName(UserNameDTO userNameDTO) {
+        validateUser(userNameDTO, "некорректные данные для обновления имени!");
+
         User updatedUser = userRepository.findByEmail(userNameDTO.getEmail())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -88,6 +97,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserPassword(UserPasswordDTO userPasswordDTO) {
+        validateUser(userPasswordDTO, "некорректные данные для обновления пароля!");
+
         User updatedUser = userRepository.findByEmail(userPasswordDTO.getEmail())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -96,5 +107,16 @@ public class UserServiceImpl implements UserService {
 
         modelMapper.map(updatedUser, UserDTO.class);
     }
-}
 
+    private <T> void validateUser(T userDTO, String exceptionMessage) {
+        if (!this.validationUtil.isValid(userDTO)) {
+            this.validationUtil
+                    .violations(userDTO)
+                    .stream()
+                    .map(ConstraintViolation::getMessage)
+                    .forEach(System.out::println);
+
+            throw new InvalidDataException(exceptionMessage);
+        }
+    }
+}
