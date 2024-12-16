@@ -1,4 +1,4 @@
-package com.DressRental.entity;
+package com.DressRental.models.entities;
 
 import jakarta.persistence.*;
 
@@ -10,17 +10,17 @@ public class Rental extends BaseEntity {
     private User user;
     private Dress dress;
     private LocalDate rentalDate;
-    private LocalDate returnDate; //больше или равно rentalDate
+    private LocalDate returnDate;
     private int deposit;
-    private int finalPrice; // >0
+    private int finalPrice;
     private Status status;
 
-    public Rental(User user, Dress dress, LocalDate rentalDate, LocalDate returnDate, int finalPrice, Status status) {
+    public Rental(User user, Dress dress, LocalDate rentalDate, LocalDate returnDate, int deposit, int finalPrice, Status status) {
         this.user = user;
         this.dress = dress;
         this.rentalDate = rentalDate;
         this.returnDate = returnDate;
-        this.deposit = 5000;
+        this.deposit = deposit;
         this.finalPrice = finalPrice;
         this.status = status;
     }

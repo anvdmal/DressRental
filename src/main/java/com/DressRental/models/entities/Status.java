@@ -1,4 +1,4 @@
-package com.DressRental.entity;
+package com.DressRental.models.entities;
 
 import jakarta.persistence.*;
 

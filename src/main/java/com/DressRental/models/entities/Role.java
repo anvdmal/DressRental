@@ -1,5 +1,6 @@
-package com.DressRental.entity;
+package com.DressRental.models.entities;
 
+import com.DressRental.models.enums.UserRoles;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -7,22 +8,23 @@ import java.util.List;
 @Entity
 @Table(name = "roles")
 public class Role extends BaseEntity {
-    private String name;
+    private UserRoles name;
     private List<User> users;
 
-    public Role(String name) {
+    public Role(UserRoles name) {
         this.name = name;
     }
 
     protected Role() {
     }
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "name", nullable = false, length = 50)
-    public String getName() {
+    public UserRoles getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(UserRoles name) {
         this.name = name;
     }
 

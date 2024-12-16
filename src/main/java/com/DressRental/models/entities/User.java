@@ -1,5 +1,9 @@
-package com.DressRental.entity;
+package com.DressRental.models.entities;
 
+import com.DressRental.models.entities.BaseEntity;
+import com.DressRental.models.entities.ClientRating;
+import com.DressRental.models.entities.Rental;
+import com.DressRental.models.entities.Role;
 import jakarta.persistence.*;
 
 import java.util.List;
@@ -12,7 +16,7 @@ public class User extends BaseEntity {
     private String name;
     private List<Role> roles;
     private List<Rental> rentals;
-    private List<UserRating> ratings;
+    private List<ClientRating> ratings;
 
     public User(String email, String password, String name) {
         this.email = email;
@@ -68,12 +72,12 @@ public class User extends BaseEntity {
         this.rentals = rentals;
     }
 
-    @OneToMany(mappedBy = "user", targetEntity = UserRating.class)
-    public List<UserRating> getRatings() {
+    @OneToMany(mappedBy = "user", targetEntity = ClientRating.class)
+    public List<ClientRating> getRatings() {
         return ratings;
     }
 
-    public void setRatings(List<UserRating> ratings) {
+    public void setRatings(List<ClientRating> ratings) {
         this.ratings = ratings;
     }
 }

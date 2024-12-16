@@ -1,4 +1,4 @@
-package com.DressRental.entity;
+package com.DressRental.models.entities;
 
 import jakarta.persistence.*;
 
@@ -11,22 +11,18 @@ public class Dress extends BaseEntity {
     private String name;
     private String imageURL;
     private DressSize size;
-    private int price; // >0
-    private String color;
+    private Integer price;
     private String description;
-    private boolean availability;
+    private boolean isDeleted;
     private List<Rental> rentals;
 
-    public Dress(DressCategory category, String name, String imageURL, DressSize size,
-                 int price, String color, String description) {
+    public Dress(DressCategory category, String name, DressSize size, Integer price, String description) {
         this.category = category;
         this.name = name;
-        this.imageURL = imageURL;
         this.size = size;
         this.price = price;
-        this.color = color;
         this.description = description;
-        this.availability = true;
+        this.isDeleted = false;
     }
 
     protected Dress() {}
@@ -70,21 +66,12 @@ public class Dress extends BaseEntity {
     }
 
     @Column(name = "price", nullable = false)
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public void setPrice(int price) {
+    public void setPrice(Integer price) {
         this.price = price;
-    }
-
-    @Column(name = "color", nullable = false, length = 127)
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
     }
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
@@ -96,13 +83,13 @@ public class Dress extends BaseEntity {
         this.description = description;
     }
 
-    @Column(name = "availability", nullable = false)
-    public boolean isAvailability() {
-        return availability;
+    @Column(name = "is_deleted", nullable = false)
+    public boolean isDeleted() {
+        return isDeleted;
     }
 
-    public void setAvailability(boolean availability) {
-        this.availability = availability;
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 
     @OneToMany(mappedBy = "dress", targetEntity = Rental.class)
