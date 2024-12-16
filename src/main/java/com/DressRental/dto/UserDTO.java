@@ -1,8 +1,6 @@
 package com.DressRental.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 
 public class UserDTO {
@@ -16,12 +14,9 @@ public class UserDTO {
         this.name = name;
     }
 
-    protected UserDTO() {
-    }
+    public UserDTO() {}
 
-    @NotNull
-    @NotEmpty
-    @Email(message = "Неккоректный email!")
+    @NotEmpty(message = "Email обязателен")
     public String getEmail() {
         return email;
     }
@@ -30,9 +25,8 @@ public class UserDTO {
         this.email = email;
     }
 
-    @NotNull
-    @NotEmpty
-    @Length(min = 8, message = "Пароль должен состоять минимум из восьми символов!")
+    @NotEmpty(message = "Пароль обязателен")
+    @Length(min = 8, message = "Пароль должен состоять минимум из восьми символов")
     public String getPassword() {
         return password;
     }
@@ -41,9 +35,8 @@ public class UserDTO {
         this.password = password;
     }
 
-    @NotNull
-    @NotEmpty
-    @Length(min = 2, message = "Имя должно содержать минимум два символа!")
+    @NotEmpty(message = "Имя обязательно")
+    @Length(min = 2, max = 40, message = "Имя должно содержать минимум два символа")
     public String getName() {
         return name;
     }
