@@ -19,6 +19,11 @@ public abstract class BaseRepository<Entity, UUID> {
         this.entityClass = entityClass;
     }
 
+    public long count() {
+        return entityManager.createQuery("select count(*) from " + entityClass.getName(), Long.class)
+                .getSingleResult();
+    }
+
     @Transactional
     public Entity create(Entity entity) {
         entityManager.persist(entity);
