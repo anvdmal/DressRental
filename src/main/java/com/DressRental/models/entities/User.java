@@ -1,9 +1,5 @@
 package com.DressRental.models.entities;
 
-import com.DressRental.models.entities.BaseEntity;
-import com.DressRental.models.entities.ClientRating;
-import com.DressRental.models.entities.Rental;
-import com.DressRental.models.entities.Role;
 import jakarta.persistence.*;
 
 import java.util.List;
