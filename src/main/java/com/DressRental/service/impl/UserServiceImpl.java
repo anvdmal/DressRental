@@ -1,111 +1,95 @@
 package com.DressRental.service.impl;
 
+import com.DressRental.dto.RentalHistoryDTO;
 import com.DressRental.dto.UserDTO;
-import com.DressRental.dto.UserNameDTO;
-import com.DressRental.dto.UserPasswordDTO;
-import com.DressRental.entity.Role;
-import com.DressRental.entity.User;
-import com.DressRental.exception.InvalidDataException;
-import com.DressRental.exception.UserAlreadyExistsException;
-import com.DressRental.exception.UserNotFoundException;
-import com.DressRental.repository.impl.RoleRepositoryImpl;
+import com.DressRental.dto.UserEditDTO;
+import com.DressRental.exceptions.PasswordMatchingException;
+import com.DressRental.models.entities.Rental;
+import com.DressRental.models.entities.User;
+import com.DressRental.exceptions.InvalidDataException;
+import com.DressRental.exceptions.UserNotFoundException;
 import com.DressRental.repository.impl.UserRepositoryImpl;
 import com.DressRental.service.UserService;
 import jakarta.validation.ConstraintViolation;
 import com.DressRental.utils.ValidationUtilImpl;
-import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@EnableCaching
 public class UserServiceImpl implements UserService {
-    private final UserRepositoryImpl userRepository;
-    private final RoleRepositoryImpl roleRepository;
-    private final ModelMapper modelMapper;
-    private final ValidationUtilImpl validationUtil;
+    private UserRepositoryImpl userRepository;
+    private ValidationUtilImpl validationUtil;
+    private PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepositoryImpl userRepository, RoleRepositoryImpl roleRepository, ModelMapper modelMapper, ValidationUtilImpl validationUtil) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.modelMapper = modelMapper;
+    public UserServiceImpl(ValidationUtilImpl validationUtil, PasswordEncoder passwordEncoder) {
         this.validationUtil = validationUtil;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Autowired
+    private void setUserRepository(UserRepositoryImpl userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public void addUser(UserDTO userDTO) {
-        validateUser(userDTO, "некорректные данные для добавления!");
-
-        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException();
-        }
-
-        User user = modelMapper.map(userDTO, User.class);
-        User newUser = userRepository.create(user);
-
-        Role clientRole = roleRepository.findByName("CLIENT")
-                .orElseThrow(() -> new InvalidDataException("Роль не найдена!"));
-
-        user.setRoles(List.of(clientRole));
-        userRepository.update(user);
-
-        modelMapper.map(newUser, UserDTO.class);
-
+    public UserDTO getUserById(UUID userId) {
+        return userRepository.findById(userId).map(u -> new UserDTO(u.getEmail(), u.getPassword(), u.getName()))
+                .orElseThrow(() -> new UserNotFoundException(userId));
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        List<UserDTO> allUsers = userRepository.findAll()
-                .stream()
-                .map(user -> modelMapper.map(user, UserDTO.class))
-                .collect(Collectors.toList());
-        if (allUsers.isEmpty()) {
-            throw new UserNotFoundException();
-        } else {
-            return allUsers;
-        }
-    }
+    public void updateUser(String email, UserEditDTO userEditDTO) {
+        validateUser(userEditDTO, "Некорректные данные для обновления пользователя!");
 
-    @Override
-    public UserDTO findUserById(UUID id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
-        return modelMapper.map(user, UserDTO.class);
-    }
-
-    @Override
-    public UserDTO findUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException(email));
-        return modelMapper.map(user, UserDTO.class);
+
+
+        if (!userEditDTO.getPassword().equals(userEditDTO.getConfirmPassword())) {
+            throw new PasswordMatchingException();
+        }
+
+        user.setPassword(passwordEncoder.encode(userEditDTO.getPassword()));
+        user.setName(userEditDTO.getName());
+
+        userRepository.update(user);
     }
 
     @Override
-    public void updateUserName(UserNameDTO userNameDTO) {
-        validateUser(userNameDTO, "некорректные данные для обновления имени!");
-
-        User updatedUser = userRepository.findByEmail(userNameDTO.getEmail())
-                .orElseThrow(UserNotFoundException::new);
-
-        updatedUser.setName(userNameDTO.getName());
-        userRepository.update(updatedUser);
-
-        modelMapper.map(updatedUser, UserDTO.class);
+    public BigDecimal getAverageRatingForUser(UUID clientId) {
+        return userRepository.getUserRating(clientId);
     }
 
     @Override
-    public void updateUserPassword(UserPasswordDTO userPasswordDTO) {
-        validateUser(userPasswordDTO, "некорректные данные для обновления пароля!");
+    @Cacheable("rental_history")
+    public List<RentalHistoryDTO> getRentalHistory(UUID clientId) {
+        List<Rental> rentalHistory = userRepository.getUserRentals(clientId);
 
-        User updatedUser = userRepository.findByEmail(userPasswordDTO.getEmail())
-                .orElseThrow(UserNotFoundException::new);
+        return rentalHistory.stream()
+                .map(this::mapToRentalDTO)
+                .collect(Collectors.toList());
+    }
 
-        updatedUser.setPassword(userPasswordDTO.getPassword());
-        userRepository.update(updatedUser);
-
-        modelMapper.map(updatedUser, UserDTO.class);
+    private RentalHistoryDTO mapToRentalDTO(Rental rental) {
+        return new RentalHistoryDTO(
+                rental.getId(),
+                rental.getUser().getId(),
+                rental.getDress().getName(),
+                rental.getDress().getSize().getName(),
+                rental.getRentalDate(),
+                rental.getReturnDate(),
+                rental.getDeposit(),
+                rental.getFinalPrice(),
+                rental.getStatus().getName());
     }
 
     private <T> void validateUser(T userDTO, String exceptionMessage) {
