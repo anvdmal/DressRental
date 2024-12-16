@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg bg-light" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+    <div class="container-fluid">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
+                <li class="nav-item mx-3">
+                    <a class="nav-item nav-link text-dark fw-bold fs-4" href="/">DressCode</a>
+                </li>
+                <li class="nav-item mx-3" sec:authorize="hasRole('CLIENT')">
+                    <a class="nav-item nav-link text-dark" href="/dress/shining-time">ВРЕМЯ СИЯТЬ!</a>
+                </li>
+                <li class="nav-item mx-3" sec:authorize="hasRole('CLIENT')">
+                    <a class="nav-item nav-link text-dark text-info" href="/user/profile">ПРОФИЛЬ</a>
+                </li>
+                <li class="nav-item mx-3" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-item nav-link text-dark" href="/rentals/not-confirmed">АРЕНДЫ</a>
+                </li>
+                <li class="nav-item mx-3" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-item nav-link text-dark" href="/ratings">РЕЙТИНГИ КЛИЕНТОВ</a>
+                </li>
+                <li class="nav-item mx-3" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-item nav-link text-dark" href="/dress/create">ДОБАВИТЬ ПЛАТЬЕ</a>
+                </li>
+                <li class="nav-item mx-3" sec:authorize="!isAuthenticated()">
+                    <a class="nav-item nav-link text-dark" href="/user/login">ВОЙТИ</a>
+                </li>
+                <li class="nav-item mx-3" sec:authorize="isAuthenticated()">
+                    <form
+                            th:method="post"
+                            th:action="@{/user/logout}">
+                        <input class="btn btn-link nav-link" type="submit" value="ВЫЙТИ">
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
