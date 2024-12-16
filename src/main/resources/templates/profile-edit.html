@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"/>
+<body class="d-flex flex-column h-100">
+<div th:replace="fragments/navbar">Navbar</div>
+<main class="flex-shrink-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="jumbotron text-center rounded col-md-8 align-self-center pt-5">
+                <div class="row justify-content-center">
+                    <h1 class="text-uppercase text-center">Редактировать профиль</h1>
+                </div>
+                <form th:action="@{/user/profile/edit}"
+                      th:method="post"
+                      th:object="${form}"
+                      class="m-md-auto w-50 pb-3">
+
+                    <div class="mb-3">
+                        <label class="form-label" for="name">Имя</label>
+                        <input th:field="*{name}"
+                               th:errorclass="is-invalid"
+                               type="text"
+                               class="form-control"
+                               id="name"/>
+                        <small th:if="${#fields.hasErrors('name')}"
+                               th:errors="*{name}"
+                               class="text-danger">Error message</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="password">Пароль</label>
+                        <input th:field="*{password}"
+                               th:errorclass="is-invalid"
+                               type="password"
+                               class="form-control"
+                               id="password"/>
+                        <small th:if="${#fields.hasErrors('password')}"
+                               th:errors="*{password}"
+                               class="text-danger">Error message</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="confirmPassword">Подтвердите пароль</label>
+                        <input th:field="*{confirmPassword}"
+                               th:errorclass="is-invalid"
+                               type="password"
+                               class="form-control"
+                               id="confirmPassword"/>
+                        <small th:if="${#fields.hasErrors('confirmPassword')}"
+                               th:errors="*{confirmPassword}"
+                               class="text-danger">Error message</small>
+                    </div>
+
+                    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                        <p th:text="${errorMessage}"></p>
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary btn-sm">Обновить информацию</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer"/>
+</body>
+</html>
