@@ -1,4 +1,4 @@
-package com.DressRental.exception;
+package com.DressRental.exceptions;
 
 public class InvalidDataException extends RuntimeException {
     public InvalidDataException(String message) {
