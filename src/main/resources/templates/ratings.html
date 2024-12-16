@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"/>
+<body class="d-flex flex-column h-100">
+<div th:replace="fragments/navbar">Navbar</div>
+<main class="flex-shrink-0">
+    <div class="container mt-4 mb-3">
+        <div class="row justify-content-center">
+            <h1 class="text-uppercase text-center">Рейтинги клиентов</h1>
+        </div>
+        <div class="row justify-content-start mt-2">
+            <div class="col-md-12">
+                <div class="card mt-4" th:each="rating : ${model.ratings}">
+                    <div class="card-body">
+                        <p class="mb-1"><strong>ID клиента:</strong> <span th:text="${rating.clientId}"></span></p>
+                        <p class="mb-1"><strong>Имя клиента:</strong> <span th:text="${rating.clientName}"></span></p>
+                        <p class="mb-1"><strong>Рейтинг:</strong> <span th:text="${rating.rating}"></span></p>
+                        <p class="mb-1"><strong>Комментарий:</strong> <span th:text="${rating.comment}"></span></p>
+                        <p class="mb-1"><strong>Дата:</strong>
+                            <span th:text="${#temporals.format(rating.date, 'dd MMMM yyyy', new java.util.Locale('ru', 'RU'))}"></span>
+                        </p>
+                    </div>
+                    <div class="card-footer">
+                        <a th:href="@{/ratings/{ratingId}/edit(ratingId=${rating.ratingId})}"
+                           class="btn btn-secondary btn-sm">Редактировать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer"/>
+</body>
+</html>

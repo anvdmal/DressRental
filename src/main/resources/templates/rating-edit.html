@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"/>
+<body class="d-flex flex-column h-100">
+<div th:replace="fragments/navbar">Navbar</div>
+<main class="flex-shrink-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="jumbotron text-center rounded col-md-8 align-self-center pt-5">
+                <div class="row justify-content-center">
+                    <h1 class="text-uppercase text-center">Редактировать рейтинг</h1>
+                </div>
+                <form th:action="@{/ratings/{ratingId}/edit(ratingId=${ratingId})}"
+                      th:method="post"
+                      th:object="${form}"
+                      class="m-md-auto w-50 pb-3">
+
+                    <div class="mb-3">
+                        <label class="form-label">ID клиента</label>
+                        <p th:text="${model.clientId}"></p>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Рейтинг</label>
+                        <div class="row justify-content-center">
+                            <div th:each="i : ${#numbers.sequence(1, 5)}" class="col-auto">
+                                <div class="form-check">
+                                    <input type="radio" th:field="*{rating}" th:value="${i}" class="form-check-input" id="'rating' + ${i}" />
+                                    <label class="form-check-label" th:for="'rating' + ${i}" th:text="${i}"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="comment">Комментарий</label>
+                        <textarea th:field="*{comment}"
+                                  th:errorclass="is-invalid"
+                                  class="form-control"
+                                  id="comment"
+                                  rows="4"></textarea>
+                        <small th:if="${#fields.hasErrors('comment')}"
+                               th:errors="*{comment}"
+                               class="text-danger">Error message</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-secondary btn-sm">Обновить информацию</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer"/>
+</body>
+</html>
