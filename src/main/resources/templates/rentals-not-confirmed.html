@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"/>
+<body class="d-flex flex-column h-100">
+<div th:replace="fragments/navbar">Navbar</div>
+<main class="flex-shrink-0">
+    <div class="container mt-4 mb-3">
+        <div class="row justify-content-center">
+            <h1 class="text-uppercase text-center">Заявки на примерку</h1>
+        </div>
+        <div th:replace="fragments/rentals-navbar">Navbar</div>
+        <div class="row justify-content-start">
+            <div class="col-md-12">
+                <div class="card mt-4" th:each="rental : ${model.rentals}">
+                    <div class="card-body">
+                        <p class="mb-1"><strong>Номер брони:</strong> <span th:text="${rental.rentalId}"></span></p>
+                        <p class="mb-1"><strong>ID клиента:</strong> <span th:text="${rental.clientId}"></span></p>
+                        <p class="mb-1"><strong>Наименование платья:</strong> <span th:text="${rental.dressName}"></span></p>
+                        <p class="mb-1"><strong>Размер:</strong> <span th:text="${rental.dressSize}"></span></p>
+                        <p class="mb-1"><strong>Дата аренды:</strong>
+                            <span th:text="${#temporals.format(rental.rentalDate, 'dd MMMM yyyy', new java.util.Locale('ru', 'RU'))}"></span>
+                        </p>
+                        <p class="mb-1"><strong>Дата возврата:</strong>
+                            <span th:text="${#temporals.format(rental.returnDate, 'dd MMMM yyyy', new java.util.Locale('ru', 'RU'))}"></span>
+                        </p>
+                        <p class="mb-1"><strong>Депозит:</strong> <span th:text="${rental.deposit} + ' ₽'"></span></p>
+                        <p class="mb-1"><strong>Итоговая цена:</strong> <span th:text="${rental.finalPrice} + ' ₽'"></span></p>
+                        <p class="mb-1"><strong>Статус:</strong> <span th:text="${rental.status}"></span></p>
+                    </div>
+                    <div class="card-footer">
+                        <form th:action="@{/rentals/not-confirmed/{rentalId}/confirm(rentalId=${rental.rentalId})}" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-secondary btn-sm">Подтвердить</button>
+                        </form>
+                        <form th:action="@{/rentals/not-confirmed/{rentalId}/cancel(rentalId=${rental.rentalId})}" method="post" style="display:inline">
+                            <button type="submit" class="btn btn-secondary btn-sm ms-2">Отменить</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer"/>
+</body>
+</html>

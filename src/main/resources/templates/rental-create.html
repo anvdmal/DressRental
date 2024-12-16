@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ru" class="h-100" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head"/>
+<body class="d-flex flex-column h-100">
+<div th:replace="fragments/navbar">Navbar</div>
+<main class="flex-shrink-0">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="jumbotron text-center rounded col-md-8 align-self-center pt-5">
+                <div class="justify-content-center">
+                    <div class="row justify-content-center">
+                        <h1 class="text-uppercase text-center">Бронирование</h1>
+                        <h3 th:text="${dressName}"></h3>
+                    </div>
+                    <form th:action="@{/dress/{dressName}/rent(dressName=${dressName})}"
+                          th:method="post"
+                          th:object="${form}"
+                          class="m-md-auto w-50 pb-3">
+
+                        <div class="mb-3">
+                            <label class="form-label" for="size">Размер</label>
+                            <select id="size" name="size" th:field="*{dressSize}" class="form-control">
+                                <option value="" disabled selected>Выберите размер</option>
+                                <option th:each="size : ${sizes}"
+                                        th:value="${size}"
+                                        th:text="${size}"
+                                        th:errorclass="is-invalid">>
+                                </option>
+                            </select>
+                            <small th:if="${#fields.hasErrors('dressSize')}"
+                                   th:errors="*{dressSize}"
+                                   class="text-danger">Error message</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="rentalDate">Дата начала бронирования</label>
+                            <input type="date"
+                                   id="rentalDate"
+                                   th:field="*{rentalDate}"
+                                   th:errorclass="is-invalid"
+                                   class="form-control" required/>
+                            <small th:if="${#fields.hasErrors('rentalDate')}"
+                                   th:errors="*{rentalDate}"
+                                   class="text-danger">Error message</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label" for="returnDate">Дата окончания бронирования</label>
+                            <input type="date"
+                                   id="returnDate"
+                                   th:field="*{returnDate}"
+                                   th:errorclass="is-invalid"
+                                   class="form-control" required/>
+                            <small th:if="${#fields.hasErrors('returnDate')}"
+                                   th:errors="*{returnDate}"
+                                   class="text-danger">Error message</small>
+                        </div>
+
+                        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                            <p th:text="${errorMessage}"></p>
+                        </div>
+
+                        <button type="submit" class="btn btn-secondary btn-sm">Оформить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer th:replace="fragments/footer"/>
+</body>
+</html>
