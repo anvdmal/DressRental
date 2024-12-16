@@ -1,6 +1,6 @@
 package com.DressRental.repository.impl;
 
-import com.DressRental.entity.DressCategory;
+import com.DressRental.models.entities.DressCategory;
 import com.DressRental.repository.BaseRepository;
 import com.DressRental.repository.DressCategoryRepository;
 import org.springframework.stereotype.Repository;

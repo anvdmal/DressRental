@@ -1,6 +1,6 @@
 package com.DressRental.repository.impl;
 
-import com.DressRental.entity.DressSize;
+import com.DressRental.models.entities.DressSize;
 import com.DressRental.repository.BaseRepository;
 import com.DressRental.repository.DressSizeRepository;
 import org.springframework.stereotype.Repository;
