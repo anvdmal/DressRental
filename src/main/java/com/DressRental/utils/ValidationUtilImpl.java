@@ -16,7 +16,6 @@ public class ValidationUtilImpl implements ValidationUtil {
         this.validator = validator;
     }
 
-
     @Override
     public <E> boolean isValid(E object) {
         return this.validator.validate(object).isEmpty();
