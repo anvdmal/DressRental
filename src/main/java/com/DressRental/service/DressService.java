@@ -1,6 +1,8 @@
 package com.DressRental.service;
 
-import com.DressRental.dto.*;
+import com.DressRental.dto.input.DressCreateDTO;
+import com.DressRental.dto.input.DressEditDTO;
+import com.DressRental.dto.output.DressDTO;
 
 import java.util.List;
 import java.util.UUID;

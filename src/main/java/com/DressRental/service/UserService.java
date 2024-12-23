@@ -1,8 +1,8 @@
 package com.DressRental.service;
 
-import com.DressRental.dto.RentalHistoryDTO;
-import com.DressRental.dto.UserDTO;
-import com.DressRental.dto.UserEditDTO;
+import com.DressRental.dto.output.RentalHistoryDTO;
+import com.DressRental.dto.output.UserDTO;
+import com.DressRental.dto.input.UserEditDTO;
 
 import java.math.BigDecimal;
 import java.util.List;

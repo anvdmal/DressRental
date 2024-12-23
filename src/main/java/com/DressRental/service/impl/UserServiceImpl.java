@@ -1,8 +1,8 @@
 package com.DressRental.service.impl;
 
-import com.DressRental.dto.RentalHistoryDTO;
-import com.DressRental.dto.UserDTO;
-import com.DressRental.dto.UserEditDTO;
+import com.DressRental.dto.output.RentalHistoryDTO;
+import com.DressRental.dto.output.UserDTO;
+import com.DressRental.dto.input.UserEditDTO;
 import com.DressRental.exceptions.PasswordMatchingException;
 import com.DressRental.models.entities.Rental;
 import com.DressRental.models.entities.User;

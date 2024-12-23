@@ -1,6 +1,8 @@
 package com.DressRental.service.impl;
 
-import com.DressRental.dto.*;
+import com.DressRental.dto.input.DressCreateDTO;
+import com.DressRental.dto.input.DressEditDTO;
+import com.DressRental.dto.output.DressDTO;
 import com.DressRental.models.entities.Dress;
 import com.DressRental.models.entities.DressCategory;
 import com.DressRental.models.entities.DressSize;

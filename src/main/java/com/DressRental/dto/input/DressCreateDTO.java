@@ -1,4 +1,4 @@
-package com.DressRental.dto;
+package com.DressRental.dto.input;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

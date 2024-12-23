@@ -1,6 +1,6 @@
 package com.DressRental.utils;
 
-import com.DressRental.dto.RentalCreateDTO;
+import com.DressRental.dto.input.RentalCreateDTO;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.springframework.stereotype.Component;

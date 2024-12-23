@@ -1,7 +1,7 @@
 package com.DressRental.service.impl;
 
-import com.DressRental.dto.RentalCreateDTO;
-import com.DressRental.dto.RentalHistoryDTO;
+import com.DressRental.dto.input.RentalCreateDTO;
+import com.DressRental.dto.output.RentalHistoryDTO;
 import com.DressRental.models.entities.Dress;
 import com.DressRental.models.entities.Rental;
 import com.DressRental.models.entities.Status;
@@ -94,9 +94,9 @@ public class RentalServiceImpl implements RentalService {
 
         double multiplier;
 
-        if (rating.compareTo(new BigDecimal("4")) >= 0) {
+        if (rating.compareTo(new BigDecimal("4")) > 0) {
             multiplier = 0.5;
-        } else if (rating.compareTo(new BigDecimal("3")) >= 0) {
+        } else if (rating.compareTo(new BigDecimal("3")) > 0) {
             multiplier = 0.75;
         } else {
             multiplier = 1;

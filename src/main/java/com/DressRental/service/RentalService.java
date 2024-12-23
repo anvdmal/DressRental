@@ -1,7 +1,7 @@
 package com.DressRental.service;
 
-import com.DressRental.dto.RentalCreateDTO;
-import com.DressRental.dto.RentalHistoryDTO;
+import com.DressRental.dto.input.RentalCreateDTO;
+import com.DressRental.dto.output.RentalHistoryDTO;
 
 import java.util.List;
 import java.util.UUID;

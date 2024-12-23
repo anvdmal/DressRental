@@ -1,6 +1,6 @@
 package com.DressRental.controllers;
 
-import com.DressRental.dto.ClientRatingCreateEditDTO;
+import com.DressRental.dto.input.ClientRatingCreateEditDTO;
 import com.DressRental.service.impl.ClientRatingServiceImpl;
 import com.DressRental.service.impl.RentalServiceImpl;
 import com.DressRentalContracts.controllers.ClientRatingController;
@@ -85,7 +85,7 @@ public class ClientRatingControllerImpl implements ClientRatingController {
         var rental = rentalService.getRentalById(rentalId);
 
         if (bindingResult.hasErrors()) {
-            LOG.log(Level.INFO, "Incorrect creation new client rating for rental " + rentalId);
+            LOG.log(Level.INFO, "Incorrect creation new rating for client " + rental.getClientId());
             var viewModel = new AddClientRatingViewModel(
                     createBaseViewModel("Добавить рейтинг"),
                     rental.getClientId(),
@@ -96,7 +96,7 @@ public class ClientRatingControllerImpl implements ClientRatingController {
         }
 
         clientRatingService.addRating(rental.getClientId(), rentalId, new ClientRatingCreateEditDTO(form.rating(), form.comment()));
-        LOG.log(Level.INFO, "Correct creation new client rating for rental " + rentalId);
+        LOG.log(Level.INFO, "Correct creation new rating for client " + rental.getClientId());
         return "redirect:/ratings";
     }
 

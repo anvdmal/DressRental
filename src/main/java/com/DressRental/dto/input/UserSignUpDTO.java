@@ -1,20 +1,24 @@
-package com.DressRental.dto;
+package com.DressRental.dto.input;
 
+import com.DressRental.utils.UniqueEmail;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
-public class UserEditDTO {
+public class UserSignUpDTO {
     private String name;
+    private String email;
     private String password;
     private String confirmPassword;
 
-    public UserEditDTO(String name, String password, String confirmPassword) {
+    public UserSignUpDTO(String name, String email, String password, String confirmPassword) {
         this.name = name;
+        this.email = email;
         this.password = password;
         this.confirmPassword = confirmPassword;
     }
 
-    public UserEditDTO() {}
+    public UserSignUpDTO() {}
 
     @NotEmpty(message = "Имя обязательно")
     @Length(min = 2, max = 40, message = "Имя должно содержать минимум два символа")
@@ -24,6 +28,17 @@ public class UserEditDTO {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @NotEmpty(message = "Email обязателен")
+    @Email(message = "Некорректный формат email")
+    @UniqueEmail(message = "Пользователь с таким email уже существует")
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @NotEmpty(message = "Пароль обязателен")
@@ -45,3 +60,5 @@ public class UserEditDTO {
         this.confirmPassword = confirmPassword;
     }
 }
+
+

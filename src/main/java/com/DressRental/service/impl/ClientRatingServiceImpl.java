@@ -1,7 +1,7 @@
 package com.DressRental.service.impl;
 
-import com.DressRental.dto.ClientRatingCreateEditDTO;
-import com.DressRental.dto.ClientRatingDTO;
+import com.DressRental.dto.input.ClientRatingCreateEditDTO;
+import com.DressRental.dto.output.ClientRatingDTO;
 import com.DressRental.models.entities.Rental;
 import com.DressRental.models.entities.User;
 import com.DressRental.models.entities.ClientRating;

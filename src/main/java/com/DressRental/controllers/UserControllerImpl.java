@@ -1,7 +1,7 @@
 package com.DressRental.controllers;
 
-import com.DressRental.dto.UserEditDTO;
-import com.DressRental.dto.UserSignUpDTO;
+import com.DressRental.dto.input.UserEditDTO;
+import com.DressRental.dto.input.UserSignUpDTO;
 import com.DressRental.exceptions.PasswordMatchingException;
 import com.DressRental.exceptions.UserAlreadyExistsException;
 import com.DressRental.service.impl.AuthService;
@@ -172,7 +172,7 @@ public class UserControllerImpl implements UserController {
         var email = principal.getName();
 
         if (bindingResult.hasErrors()) {
-            LOG.log(Level.INFO, "Incorrect editing profile for" + principal.getName());
+            LOG.log(Level.INFO, "Incorrect editing profile for client " + principal.getName());
             var viewModel = new EditUserProfileViewModel(createBaseViewModel("Редактировать профиль"));
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);
@@ -181,10 +181,10 @@ public class UserControllerImpl implements UserController {
 
         try {
             userService.updateUser(email, new UserEditDTO(form.name(), form.password(), form.confirmPassword()));
-            LOG.log(Level.INFO, "Correct editing profile for" + principal.getName());
+            LOG.log(Level.INFO, "Correct editing profile for client " + principal.getName());
             return "redirect:/user/profile";
         } catch (PasswordMatchingException e) {
-            LOG.log(Level.INFO, "Incorrect editing profile for" + principal.getName());
+            LOG.log(Level.INFO, "Incorrect editing profile for client " + principal.getName());
             var viewModel = new EditUserProfileViewModel(createBaseViewModel("Редактировать профиль"));
             model.addAttribute("model", viewModel);
             model.addAttribute("form", form);

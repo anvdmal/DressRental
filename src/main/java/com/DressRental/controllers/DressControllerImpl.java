@@ -1,6 +1,8 @@
 package com.DressRental.controllers;
 
-import com.DressRental.dto.*;
+import com.DressRental.dto.input.DressCreateDTO;
+import com.DressRental.dto.input.DressEditDTO;
+import com.DressRental.dto.input.RentalCreateDTO;
 import com.DressRental.exceptions.DressAlreadyRentedException;
 import com.DressRental.exceptions.InvalidDataException;
 import com.DressRental.service.impl.AuthService;
@@ -161,16 +163,16 @@ public class DressControllerImpl implements DressController {
         RentalCreateDTO rentalCreateDTO = new RentalCreateDTO(form.dressSize(), form.rentalDate(), form.returnDate());
 
         if (bindingResult.hasErrors()) {
-            LOG.log(Level.INFO, "Incorrect rental of a dress for " + principal.getName());
+            LOG.log(Level.INFO, "Incorrect rental of a dress " + dressName + " for " + principal.getName());
             return correctRentalCreatePage(model, form, dressName, null);
         }
 
         try {
             var newRentalId = rentalService.addRental(user.getId(), dressName, rentalCreateDTO);
-            LOG.log(Level.INFO, "Correct rental of a dress for " + principal.getName());
+            LOG.log(Level.INFO, "Correct rental of a dress " + dressName + " for " + principal.getName());
             return "redirect:/dress/rent/" + newRentalId;
         } catch (DressAlreadyRentedException | InvalidDataException e) {
-            LOG.log(Level.INFO, "Incorrect rental of a dress for " + principal.getName());
+            LOG.log(Level.INFO, "Incorrect rental of a dress " + dressName + " for " + principal.getName());
             return correctRentalCreatePage(model, form, dressName, e.getMessage());
         }
     }
@@ -232,7 +234,7 @@ public class DressControllerImpl implements DressController {
         }
 
         dressService.addDress(new DressCreateDTO(form.category(), form.name(), form.sizes(), form.price(), form.description()));
-        LOG.log(Level.INFO, "Correct creation new dress");
+        LOG.log(Level.INFO, "Correct creation new dress " + form.name());
         redirectAttributes.addAttribute("categoryName", form.category());
         return "redirect:/dress/admin/{categoryName}";
     }

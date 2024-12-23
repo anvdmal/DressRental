@@ -1,5 +1,6 @@
-package com.DressRental.dto;
+package com.DressRental.dto.input;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Length;
 
@@ -15,6 +16,7 @@ public class UserSignInDTO {
     public UserSignInDTO() {}
 
     @NotEmpty(message = "Email обязателен")
+    @Email(message = "Некорректный формат email")
     public String getEmail() {
         return email;
     }

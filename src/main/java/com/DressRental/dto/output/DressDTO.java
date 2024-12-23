@@ -1,4 +1,4 @@
-package com.DressRental.dto;
+package com.DressRental.dto.output;
 
 import java.util.List;
 

@@ -1,6 +1,6 @@
 package com.DressRental.service.impl;
 
-import com.DressRental.dto.UserSignUpDTO;
+import com.DressRental.dto.input.UserSignUpDTO;
 import com.DressRental.exceptions.PasswordMatchingException;
 import com.DressRental.exceptions.UserAlreadyExistsException;
 import com.DressRental.models.entities.User;

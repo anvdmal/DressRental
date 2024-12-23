@@ -1,4 +1,4 @@
-package com.DressRental.dto;
+package com.DressRental.dto.input;
 
 import com.DressRental.utils.ReturnDateValid;
 import jakarta.validation.constraints.NotEmpty;
