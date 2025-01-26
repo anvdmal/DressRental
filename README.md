@@ -12,12 +12,12 @@
 
 Демонстрация основных экранов приложения
 * Главная страница.
-   ![image](https://github.com/user-attachments/assets/6d365eac-82aa-4375-97c0-738e6bdb9c24)
+   ![image](https://github.com/user-attachments/assets/8971522e-91c2-49f0-a515-85d9658f5efe)
 * Профиль клиента.
    ![image](https://github.com/user-attachments/assets/1b1b5217-4112-440c-9fb4-6ecd32ef8090)
 * Страница с платьями определенной категории и индивидуальным депозитом.
-   ![image](https://github.com/user-attachments/assets/79807196-f6f5-4399-b298-9a691b99df50)
+   ![image](https://github.com/user-attachments/assets/7e52afc5-1a01-43d5-ae29-033154052212)
 * Страница бронирования платья.
-   ![image](https://github.com/user-attachments/assets/c3c97f45-b2f9-4be7-8908-fa37472c60b2)
+   ![image](https://github.com/user-attachments/assets/4d288166-d897-4552-b8a6-d0750cdaf87a)
 * Страница завершенных аренд у администратора с возможностью выставить оценку клиенту-арендатору.
    ![image](https://github.com/user-attachments/assets/77d4ca25-2318-448d-80a0-0b1318f693e6)
